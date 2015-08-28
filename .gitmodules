@@ -1,0 +1,3 @@
+[submodule "build/cfapi-json-gateway"]
+	path = build/cfapi-json-gateway
+	url = https://github.com/LoicMahieu/cfapi-json-gateway.git
