@@ -17,8 +17,15 @@ From `finalcut/coldfusion10` : [registry docker](https://hub.docker.com/r/finalc
 -server -XX:MaxPermSize=1024m -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/coldfusion/heapdump -Xbatch -Dcoldfusion.home={application.home} -Djava.security.egd=file:/dev/./urandom -Dcoldfusion.rootDir={application.home} -Dcoldfusion.libPath={application.home}/lib -Dorg.apache.coyote.USE_CUSTOM_STATUS_MSG_IN_HEADER=true -Dcoldfusion.jsafe.defaultalgo=FIPS186Random -Duser.language=fr -Duser.region=BE -Dsun.io.useCanonCaches=false
 ```
 
+## Get docker image
 
-## Build
+### Pull
+
+```
+docker pull fridus/coldfusion10
+```
+
+### Build
 
 ```
 docker build -t fridus/coldfusion10 .
