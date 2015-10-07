@@ -11,10 +11,11 @@ From `finalcut/coldfusion10` : [registry docker](https://hub.docker.com/r/finalc
 - Packages `curl php5 php5-gd`
 - [wkhtmltopdf](http://wkhtmltopdf.org/)
 - Better config java
+- Default encoding `UTF-8`
 
 #### Config automatically pushed in CF
 ```
--server -XX:MaxPermSize=1024m -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/coldfusion/heapdump -Xbatch -Dcoldfusion.home={application.home} -Djava.security.egd=file:/dev/./urandom -Dcoldfusion.rootDir={application.home} -Dcoldfusion.libPath={application.home}/lib -Dorg.apache.coyote.USE_CUSTOM_STATUS_MSG_IN_HEADER=true -Dcoldfusion.jsafe.defaultalgo=FIPS186Random -Duser.language=fr -Duser.region=BE -Dsun.io.useCanonCaches=false
+-server -XX:MaxPermSize=1024m -XX:+UseParallelGC -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/coldfusion/heapdump -Xbatch -Dcoldfusion.home={application.home} -Djava.security.egd=file:/dev/./urandom -Dcoldfusion.rootDir={application.home} -Dcoldfusion.libPath={application.home}/lib -Dorg.apache.coyote.USE_CUSTOM_STATUS_MSG_IN_HEADER=true -Dcoldfusion.jsafe.defaultalgo=FIPS186Random -Duser.language=fr -Duser.region=BE -Dsun.io.useCanonCaches=false -Dfile.encoding=UTF-8
 ```
 
 ## Get docker image
