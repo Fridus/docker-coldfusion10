@@ -46,6 +46,19 @@ docker run \
   fridus/coldfusion10
 ```
 
+With a link smtp, the mail server is automatically configured. The internal name must be `smtp`
+```
+docker run \
+  -d \
+  -p 8080:80 \
+  -v /var/www:/var/www \
+  -v /path/vhost:/etc/apache2/sites-enabled \
+  -h `hostname` \
+  --link mailcatcher:smtp
+  --name cf10 \
+  fridus/coldfusion10
+```
+
 
 ## Access
 
