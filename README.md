@@ -46,6 +46,7 @@ docker run \
   fridus/coldfusion10
 ```
 
+### With server smtp
 With a link smtp, the mail server is automatically configured. The internal name must be `smtp`
 ```
 docker run \
@@ -56,6 +57,29 @@ docker run \
   -h `hostname` \
   --link mailcatcher:smtp
   --name cf10 \
+  fridus/coldfusion10
+```
+
+### With a mysql datasource configured
+
+- `DATASOURCE_NAME`: required
+- `DATASOURCE_HOST`: required
+- `DATASOURCE_USER`: `root`
+- `DATASOURCE_PASSWORD`: `""`
+- `DATASOURCE_DB`: `DATASOURCE_NAME` if not defined
+- `DATASOURCE_ARGS`: optional
+
+```
+docker run \
+  -d \
+  -p 8080:80 \
+  -v /var/www:/var/www \
+  -v /path/vhost:/etc/apache2/sites-enabled \
+  -h `hostname` \
+  --link mailcatcher:smtp
+  --name cf10 \
+  -e DATASOURCE_NAME=burama \
+  -e DATASOURCE_HOST=`ip route get 1 | awk '{print $NF;exit}'` \
   fridus/coldfusion10
 ```
 
