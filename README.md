@@ -78,7 +78,7 @@ docker run \
   -h `hostname` \
   --link mailcatcher:smtp
   --name cf10 \
-  -e DATASOURCE_NAME=burama \
+  -e DATASOURCE_NAME=mydatasource \
   -e DATASOURCE_HOST=`ip route get 1 | awk '{print $NF;exit}'` \
   fridus/coldfusion10
 ```
