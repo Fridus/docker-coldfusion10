@@ -12,7 +12,8 @@ ADD ./build/coldfusion-service /opt/coldfusion10/cfusion/bin/coldfusion
 RUN chmod +x /opt/coldfusion10/cfusion/bin/coldfusion && ln -s /opt/coldfusion10/cfusion/bin/coldfusion /etc/init.d/coldfusion
 
 # gateway
-ADD ./build/cfapi-json-gateway/Gateway.cfc /var/www/CF/Gateway.cfc
+ADD ./build/cfapi-json-gateway/Gateway.cfc /CF/Gateway.cfc
+COPY ./build/vhost-default /etc/apache2/sites-available/default
 
 # apache modules
 RUN a2enmod rewrite && a2enmod headers

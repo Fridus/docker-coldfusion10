@@ -32,18 +32,47 @@ docker pull fridus/coldfusion10
 docker build -t fridus/coldfusion10 .
 ```
 
-
 ## Create the docker
 
 ```
 docker run \
   -d \
   -p 8080:80 \
-  -v /var/www:/var/www \
-  -v /path/vhost:/etc/apache2/sites-enabled \
+  -v /your/path:/var/www \
   -h `hostname` \
   --name cf10 \
   fridus/coldfusion10
+```
+
+### With custom vhost
+
+```
+docker run \
+  -d \
+  -p 8080:80 \
+  -v /your/path:/var/www \
+  -v /path/vhost/dir:/etc/apache2/sites-enabled \
+  -h `hostname` \
+  --name cf10 \
+  fridus/coldfusion10
+```
+
+Example of custom
+```
+<VirtualHost *:80>
+  DocumentRoot /var/www/website/www
+  <Directory />
+    AllowOverride All
+  </Directory>
+
+  Alias /CF/ "/CF/"
+  <Directory "/CF/">
+    Options Indexes FollowSymLinks MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all
+  </Directory>
+</VirtualHost>
 ```
 
 ### With server smtp
@@ -53,7 +82,6 @@ docker run \
   -d \
   -p 8080:80 \
   -v /var/www:/var/www \
-  -v /path/vhost:/etc/apache2/sites-enabled \
   -h `hostname` \
   --link mailcatcher:smtp
   --name cf10 \
@@ -74,7 +102,6 @@ docker run \
   -d \
   -p 8080:80 \
   -v /var/www:/var/www \
-  -v /path/vhost:/etc/apache2/sites-enabled \
   -h `hostname` \
   --link mailcatcher:smtp
   --name cf10 \
@@ -86,8 +113,8 @@ docker run \
 
 ## Access
 
+- `/CFIDE/administrator/index.cfm`
 - The admin password for the coldfusion server is `Adm1n$`
-- port `8080`
 
 
 ## Mapping `docker-machine` `boot2docker`
