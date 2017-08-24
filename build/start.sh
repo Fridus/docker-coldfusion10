@@ -65,7 +65,7 @@ if [ ! -z "$DATASOURCES" ]; then
     setJsonVar DATASOURCE_DB `echo $_DS | jq 'fromjson | .database'`
     _DSNAME=`echo $_DS | jq 'fromjson | .name'`
     if [ "$_DSNAME" != "null" ]; then
-      DATASOURCE_NAME=$_DSNAME
+      eval "DATASOURCE_NAME=\$$_DSNAME"
     else
       DATASOURCE_NAME=$DATASOURCE_DB
     fi
