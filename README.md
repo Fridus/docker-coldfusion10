@@ -88,7 +88,9 @@ docker run \
   fridus/coldfusion10
 ```
 
-### With a mysql datasource configured
+### With a datasource configured
+
+#### One datasource
 
 - `DATASOURCE_NAME`: required
 - `DATASOURCE_HOST`: required
@@ -106,6 +108,39 @@ docker run \
   --link mailcatcher:smtp
   --name cf10 \
   -e DATASOURCE_NAME=mydatasource \
+  -e DATASOURCE_HOST=`ip route get 1 | awk '{print $NF;exit}'` \
+  fridus/coldfusion10
+```
+
+#### Many datasources
+
+Use `DATASOURCES` in format JSON. `DATASOURCE_HOST` is the default host
+
+```json
+[{
+  "database": "...",
+  "name": "Data source name",
+  "password": "...",
+  "username": "..."
+}, {
+  "database": "...",
+  "name": "...",
+  "password": "...",
+  "username": "...",
+  "host": "..."
+}, {
+  "database": "..."
+}]
+```
+```sh
+docker run \
+  -d \
+  -p 8080:80 \
+  -v /var/www:/var/www \
+  -h `hostname` \
+  --link mailcatcher:smtp
+  --name cf10 \
+  -e DATASOURCES=`cat ./datasources.json` \
   -e DATASOURCE_HOST=`ip route get 1 | awk '{print $NF;exit}'` \
   fridus/coldfusion10
 ```
