@@ -25,5 +25,10 @@ RUN sh -c "$(curl -fsSL https://gist.githubusercontent.com/Fridus/60a7604a6f3bc1
 # Timezone
 RUN echo Europe/Brussels | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata
 
+# jq
+RUN wget --quiet https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
+    chmod +x jq-linux64 && \
+    mv jq-linux64 /usr/bin/jq
+
 ADD ./build/start.sh /start.sh
 CMD /start.sh

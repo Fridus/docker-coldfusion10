@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 _PASSWORD=${CFPASSWORD:-'Adm1n$'}
+_DEFAULT_HOST=${DATASOURCE_HOST:-''}
 
 setConfig () {
   curl -H "X-CF-AdminPassword: ${_PASSWORD}" \
@@ -8,20 +9,9 @@ setConfig () {
   http://127.0.0.1/CF/Gateway.cfc
 }
 
-# Start
-/sbin/my_init &
-sleep 8
-
-# Set mail server
-if [ ! -z $SMTP_PORT_25_TCP_ADDR ]; then
-  echo "Set Mail Server: $SMTP_PORT_25_TCP_ADDR"
-  setConfig mail setMailServer "{\"server\": \"$SMTP_PORT_25_TCP_ADDR\"}"
-  echo ''
-fi
-
-# Set first datasource
-if [ ! -z $DATASOURCE_NAME ]; then
-  _DS_HOST=${DATASOURCE_HOST:-''}
+buildDatasource () {
+  _DS_TYPE=${DATASOURCE_TYPE:-'setMySQL5'}
+  _DS_HOST=${DATASOURCE_HOST:-$_DEFAULT_HOST}
   _DS_USER=${DATASOURCE_USER:-'root'}
   _DS_PASS=${DATASOURCE_PASSWORD:-''}
   _DS_DB=${DATASOURCE_DB:-$DATASOURCE_NAME}
@@ -37,8 +27,51 @@ if [ ! -z $DATASOURCE_NAME ]; then
   fi
   _ARGS+='}'
 
+  echo ''
   echo "Set datasource: $DATASOURCE_NAME"
-  setConfig datasource setMySQL5 $_ARGS
+  setConfig datasource $_DS_TYPE $_ARGS
+}
+
+setJsonVar () {
+  if [ ! -z "$2" ] && [ "$2" != "null" ]; then
+    eval "${1}=\$$2"
+  fi
+}
+
+# Start
+/sbin/my_init &
+sleep 8
+
+# Set mail server
+if [ ! -z $SMTP_PORT_25_TCP_ADDR ]; then
+  echo "Set Mail Server: $SMTP_PORT_25_TCP_ADDR"
+  setConfig mail setMailServer "{\"server\": \"$SMTP_PORT_25_TCP_ADDR\"}"
+  echo ''
+fi
+
+# Set datasource
+if [ ! -z $DATASOURCE_NAME ]; then
+  buildDatasource
+fi
+
+# set datasources
+if [ ! -z "$DATASOURCES" ]; then
+  while read -r _DS
+  do
+    setJsonVar DATASOURCE_TYPE `echo $_DS | jq 'fromjson | .type'`
+    setJsonVar DATASOURCE_HOST `echo $_DS | jq 'fromjson | .host'`
+    setJsonVar DATASOURCE_USER `echo $_DS | jq 'fromjson | .username'`
+    setJsonVar DATASOURCE_PASSWORD `echo $_DS | jq 'fromjson | .password'`
+    setJsonVar DATASOURCE_DB `echo $_DS | jq 'fromjson | .database'`
+    _DSNAME=`echo $_DS | jq 'fromjson | .name'`
+    if [ "$_DSNAME" != "null" ]; then
+      DATASOURCE_NAME=$_DSNAME
+    else
+      DATASOURCE_NAME=$DATASOURCE_DB
+    fi
+
+    buildDatasource
+  done < <(echo $DATASOURCES | jq '.[] | tojson')
 fi
 
 wait
