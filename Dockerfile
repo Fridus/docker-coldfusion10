@@ -20,7 +20,8 @@ RUN a2enmod rewrite && a2enmod headers
 
 # wkhtmltopdf
 RUN apt-get -qq update && apt-get install -y curl php5 php5-gd
-RUN sh -c "$(curl -fsSL https://gist.githubusercontent.com/Fridus/60a7604a6f3bc199d3b7/raw/23725ab0da1ce08726f33c2eecff8459b841bbbc/install.sh)"  -- trusty
+ADD ./build/install_wkhtmltopdf.sh /tmp/install_wkhtmltopdf.sh
+RUN /tmp/install_wkhtmltopdf.sh
 
 # Timezone
 RUN echo Europe/Brussels | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata
