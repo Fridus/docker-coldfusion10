@@ -4,9 +4,9 @@ _PASSWORD=${CFPASSWORD:-'Adm1n$'}
 _DEFAULT_HOST=${DATASOURCE_HOST:-''}
 
 setConfig () {
-  curl -H "X-CF-AdminPassword: ${_PASSWORD}" \
+  curl --silent -H "X-CF-AdminPassword: ${_PASSWORD}" \
   --data "method=callAPI&wsdl=true&apiComponent=$1&apiMethod=$2&apiArguments=$3" \
-  http://127.0.0.1/CF/Gateway.cfc
+  http://127.0.0.1/CFIDE/cfadmin-agent/Gateway.cfc
 }
 
 buildDatasource () {
@@ -30,6 +30,7 @@ buildDatasource () {
   echo ''
   echo "Set datasource: $DATASOURCE_NAME"
   setConfig datasource $_DS_TYPE $_ARGS
+  echo ''
 }
 
 setJsonVar () {
@@ -38,40 +39,55 @@ setJsonVar () {
   fi
 }
 
-# Start
-/sbin/my_init &
-sleep 8
+setParameters () {
+  COLDFUSION_STATUS=`service coldfusion status`
+  if [ "$COLDFUSION_STATUS" != "Server is running" ]; then
 
-# Set mail server
-if [ ! -z $SMTP_PORT_25_TCP_ADDR ]; then
-  echo "Set Mail Server: $SMTP_PORT_25_TCP_ADDR"
-  setConfig mail setMailServer "{\"server\": \"$SMTP_PORT_25_TCP_ADDR\"}"
-  echo ''
-fi
+    echo "Server is not running. Wait..."
+    sleep 3
+    setParameters
 
-# Set datasource
-if [ ! -z $DATASOURCE_NAME ]; then
-  buildDatasource
-fi
+  else
 
-# set datasources
-if [ ! -z "$DATASOURCES" ]; then
-  while read -r _DS
-  do
-    setJsonVar DATASOURCE_TYPE `echo $_DS | jq 'fromjson | .type'`
-    setJsonVar DATASOURCE_HOST `echo $_DS | jq 'fromjson | .host'`
-    setJsonVar DATASOURCE_USER `echo $_DS | jq 'fromjson | .username'`
-    setJsonVar DATASOURCE_PASSWORD `echo $_DS | jq 'fromjson | .password'`
-    setJsonVar DATASOURCE_DB `echo $_DS | jq 'fromjson | .database'`
-    _DSNAME=`echo $_DS | jq 'fromjson | .name'`
-    if [ "$_DSNAME" != "null" ]; then
-      eval "DATASOURCE_NAME=\$$_DSNAME"
-    else
-      DATASOURCE_NAME=$DATASOURCE_DB
+    # Set datasource
+    if [ ! -z $DATASOURCE_NAME ]; then
+      buildDatasource
     fi
 
-    buildDatasource
-  done < <(echo $DATASOURCES | jq '.[] | tojson')
-fi
+    # set datasources
+    if [ ! -z "$DATASOURCES" ]; then
+      while read -r _DS
+      do
+        setJsonVar DATASOURCE_TYPE `echo $_DS | jq 'fromjson | .type'`
+        setJsonVar DATASOURCE_HOST `echo $_DS | jq 'fromjson | .host'`
+        setJsonVar DATASOURCE_USER `echo $_DS | jq 'fromjson | .username'`
+        setJsonVar DATASOURCE_PASSWORD `echo $_DS | jq 'fromjson | .password'`
+        setJsonVar DATASOURCE_DB `echo $_DS | jq 'fromjson | .database'`
+        _DSNAME=`echo $_DS | jq 'fromjson | .name'`
+        if [ "$_DSNAME" != "null" ]; then
+          eval "DATASOURCE_NAME=\$$_DSNAME"
+        else
+          DATASOURCE_NAME=$DATASOURCE_DB
+        fi
+
+        buildDatasource
+      done < <(echo $DATASOURCES | jq '.[] | tojson')
+    fi
+
+    # Set mail server
+    if [ ! -z $SMTP_PORT_25_TCP_ADDR ]; then
+      echo ''
+      echo "Set Mail Server: $SMTP_PORT_25_TCP_ADDR"
+      setConfig mail setMailServer "{\"server\": \"$SMTP_PORT_25_TCP_ADDR\"}"
+      echo ''
+    fi
+
+  fi
+}
+
+# Start
+/sbin/my_init &
+echo "Waiting coldfusion start..."
+setParameters
 
 wait
