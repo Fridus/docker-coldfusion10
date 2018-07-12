@@ -39,6 +39,17 @@ setJsonVar () {
   fi
 }
 
+setSN () {
+  LICENSE_PATH="/opt/coldfusion10/cfusion/lib/license.properties"
+  echo ''
+  echo "Set Serial number ..."
+  echo ''
+  cat $LICENSE_PATH | \
+  sed -e '/code=/ s/^#*/#/' | \
+  sed -e "s/^sn=.*$/sn=$1/" \
+  > $LICENSE_PATH
+}
+
 setParameters () {
   COLDFUSION_STATUS=`service coldfusion status`
   if [ "$COLDFUSION_STATUS" != "Server is running" ]; then
@@ -84,6 +95,11 @@ setParameters () {
 
   fi
 }
+
+# Set serial number
+if [ ! -z $SERIAL ]; then
+  setSN $SERIAL
+fi
 
 # Start
 /sbin/my_init &

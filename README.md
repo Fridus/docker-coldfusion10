@@ -64,14 +64,6 @@ Example of custom
   <Directory />
     AllowOverride All
   </Directory>
-
-  Alias /CF/ "/CF/"
-  <Directory "/CF/">
-    Options Indexes FollowSymLinks MultiViews
-    AllowOverride None
-    Order allow,deny
-    allow from all
-  </Directory>
 </VirtualHost>
 ```
 
@@ -142,6 +134,17 @@ docker run \
   --name cf10 \
   -e DATASOURCES=`cat ./datasources.json` \
   -e DATASOURCE_HOST=`ip route get 1 | awk '{print $NF;exit}'` \
+  fridus/coldfusion10
+```
+
+### Set serial number
+
+Activate your license, use env `SERIAL`.
+
+```sh
+docker run \
+  -d \
+  -e SERIAL="1234-1234-1234-1234-1234-1234" \
   fridus/coldfusion10
 ```
 
