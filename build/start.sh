@@ -97,8 +97,8 @@ setParameters () {
 }
 
 # Set serial number
-if [ ! -z $SERIAL ]; then
-  setSN $SERIAL
+if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
+  setSN $COLDFUSION_SERIAL_NUMBER
 fi
 
 # Start

@@ -102,10 +102,10 @@ docker run -d -p 8080:80 \
 
 ### Set serial number
 
-Activate your license, use env `SERIAL`.
+Activate your license, use env `COLDFUSION_SERIAL_NUMBER`.
 
 ```sh
-docker run -d -e SERIAL="1234-1234-1234-1234-1234-1234" \
+docker run -d -e COLDFUSION_SERIAL_NUMBER="1234-1234-1234-1234-1234-1234" \
   fridus/coldfusion10
 ```
 
