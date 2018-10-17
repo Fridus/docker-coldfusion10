@@ -5,17 +5,18 @@ LABEL maintainer="detry.florent@gmail.com"
 ENV TIMEZONE Europe/Brussels
 
 RUN echo "Update packages" && \
-    apt-get -qq update && \
-    apt-get -qq install -y -qq curl wget ca-certificates openssl libssl1.0.0 && \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl wget ca-certificates openssl libssl1.0.0 && \
     echo "Install Apache modules " && \
     a2enmod rewrite && a2enmod headers && \
-    apt-get install -qq libapache2-mod-rpaf && a2enmod rpaf && \
+    apt-get install -y libapache2-mod-rpaf && a2enmod rpaf && \
     echo "Setup Timezone" && \
     echo $TIMEZONE | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata && \
     echo "Install PHP5" && \
-    apt-get install -y -qq php5 php5-gd && \
+    apt-get install -y php5 php5-gd && \
     echo "Install wkhtmltopdf" && \
-    apt-get -qq install -y xvfb xfonts-75dpi && \
+    apt-get install -y xvfb xfonts-75dpi && \
     wget --quiet https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
     dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
     rm -f wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
