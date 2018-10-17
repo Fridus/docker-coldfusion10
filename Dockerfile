@@ -18,16 +18,23 @@ ADD ./build/cfapi-json-gateway/Gateway.cfc /opt/coldfusion10/cfusion/wwwroot/CFI
 
 # apache modules
 RUN a2enmod rewrite && a2enmod headers && \
-    apt-get -qq update && apt-get install -qq libapache2-mod-rpaf && a2enmod rpaf
+    apt-get -qq update && apt-get install -qq libapache2-mod-rpaf && a2enmod rpaf && \
+    rm -rf /var/lib/apt/lists/*
 
 # Timezone
 RUN echo $TIMEZONE | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata
 
 # update packages
-RUN apt-get -qq update && apt-get -qq install -y -qq curl wget ca-certificates openssl libssl1.0.0
+RUN apt-get -qq update && \
+    apt-get -qq install -y -qq curl wget ca-certificates openssl libssl1.0.0 && \
+    rm -rf /var/lib/apt/lists/*
+
+# PHP
+RUN apt-get -qq update && \
+    apt-get install -y -qq php5 php5-gd && \
+    rm -rf /var/lib/apt/lists/*
 
 # wkhtmltopdf
-RUN apt-get -qq update && apt-get install -y -qq curl php5 php5-gd
 ADD ./build/install_wkhtmltopdf.sh /tmp/install_wkhtmltopdf.sh
 RUN /tmp/install_wkhtmltopdf.sh
 
