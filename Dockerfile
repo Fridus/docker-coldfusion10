@@ -9,7 +9,7 @@ ADD ./build/jvm.config /opt/coldfusion10/cfusion/bin/jvm.config
 RUN chmod 777 /opt/coldfusion10/cfusion/bin/jvm.config
 
 # service
-RUN mv /opt/coldfusion10/cfusion/bin/coldfusion /opt/coldfusion10/cfusion/bin/coldfusion_bk
+RUN rm -f /opt/coldfusion10/cfusion/bin/coldfusion_bk
 ADD ./build/coldfusion-service /opt/coldfusion10/cfusion/bin/coldfusion
 RUN chmod +x /opt/coldfusion10/cfusion/bin/coldfusion && ln -s /opt/coldfusion10/cfusion/bin/coldfusion /etc/init.d/coldfusion
 
