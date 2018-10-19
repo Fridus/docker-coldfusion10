@@ -105,13 +105,18 @@ _setSessionManager () {
   echo "port=$port"
   echo "database=$database"
 
+  # Coldfusion
   cat /opt/coldfusion10/cfusion/runtime/conf/context.template.xml | \
     sed "s/REDIS_HOST/$host/" | \
     sed "s/REDIS_PORT/$port/" | \
     sed "s/REDIS_DATABASE/$database/" \
     > /opt/coldfusion10/cfusion/runtime/conf/context.xml
 
-  cat /opt/coldfusion10/cfusion/runtime/conf/context.xml
+  # PHP
+  cat /etc/php5/apache2/php.ini | \
+    sed "s/session.save_handler = files/session.save_handler = redis\nsession.save_path = \"tcp:\/\/$host:$port\"\nextension=redis.so/" \
+    > /etc/php5/apache2/php.ini.tmp
+  mv /etc/php5/apache2/php.ini.tmp /etc/php5/apache2/php.ini
 }
 
 setSessionManager () {

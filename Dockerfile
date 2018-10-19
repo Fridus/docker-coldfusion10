@@ -14,7 +14,10 @@ RUN echo "Update packages" && \
     echo "Setup Timezone" && \
     echo $TIMEZONE | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata && \
     echo "Install PHP5" && \
-    apt-get install -y php5 php5-gd && \
+    apt-get install -y php5 php5-gd php-pear make && \
+    pecl install -o -f redis && \
+    rm -rf /tmp/pear && \
+    apt-get remove -y php-pear make && \
     echo "Install wkhtmltopdf" && \
     apt-get install -y xvfb xfonts-75dpi && \
     wget --quiet https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
