@@ -96,14 +96,51 @@ setParameters () {
   fi
 }
 
+_setSessionManager () {
+  host=$1
+  port=$2
+  database=$3
+
+  echo "host=$host"
+  echo "port=$port"
+  echo "database=$database"
+
+  cat /opt/coldfusion10/cfusion/runtime/conf/context.template.xml | \
+    sed "s/REDIS_HOST/$host/" | \
+    sed "s/REDIS_PORT/$port/" | \
+    sed "s/REDIS_DATABASE/$database/" \
+    > /opt/coldfusion10/cfusion/runtime/conf/context.xml
+
+  cat /opt/coldfusion10/cfusion/runtime/conf/context.xml
+}
+
+setSessionManager () {
+  if [ ! -z $REDIS_PORT_6379_TCP_ADDR ]; then
+    REDIS_DATABASE=${REDIS_DATABASE:-"0"}
+    _setSessionManager $REDIS_PORT_6379_TCP_ADDR $REDIS_PORT_6379_TCP_PORT ${REDIS_DATABASE:-"0"}
+  elif [ ! -z $REDIS_HOST ]; then
+    REDIS_DATABASE=${REDIS_DATABASE:-"0"}
+    REDIS_PORT=${REDIS_PORT:-"6379"}
+    _setSessionManager $REDIS_HOST $REDIS_PORT ${REDIS_DATABASE:-"0"}
+  else
+    echo "Warn: no redis session manager."
+  fi
+}
+
 # Set serial number
 if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
   setSN $COLDFUSION_SERIAL_NUMBER
 fi
 
+setSessionManager
+
 # Start
 /sbin/my_init &
 echo "Waiting coldfusion start..."
+
+tail -f /opt/coldfusion10/cfusion/logs/*.log &
+tail -f /var/log/apache2/*.log &
+
 setParameters
 
 wait
