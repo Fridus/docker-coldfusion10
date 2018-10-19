@@ -34,6 +34,7 @@ ADD ./build/tomcat-redis-session/jedis-2.0.0.jar /opt/coldfusion10/cfusion/runti
 ADD ./build/tomcat-redis-session/tomcat-redis-session-manager-blackboard-1.2.2.jar /opt/coldfusion10/cfusion/runtime/lib/tomcat-redis-session-manager-blackboard-1.2.2.jar
 ADD ./build/tomcat-redis-session/commons-pool-1.6.jar /opt/coldfusion10/cfusion/runtime/lib/commons-pool-1.6.jar
 ADD ./build/tomcat-redis-session/context.xml /opt/coldfusion10/cfusion/runtime/conf/context.template.xml
+ADD ./build/lib/neo-runtime.xml /opt/coldfusion10/cfusion/lib/neo-runtime.xml
 ADD ./build/start.sh /start.sh
 
 RUN chmod 777 /opt/coldfusion10/cfusion/bin/jvm.config && \
