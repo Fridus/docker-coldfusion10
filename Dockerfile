@@ -1,33 +1,69 @@
+FROM phusion/baseimage:0.9.9
+EXPOSE 80 8500
+VOLUME ["/var/www", "/tmp/config"]
 
-FROM finalcut/coldfusion10
-LABEL maintainer="detry.florent@gmail.com"
-
+ENV DEBIAN_FRONTEND noninteractive
+ENV REFRESHED_AT 2018_10_19
 ENV TIMEZONE Europe/Brussels
 
-RUN echo "Update packages" && \
-    apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y curl wget ca-certificates openssl libssl1.0.0 && \
-    echo "Install Apache modules " && \
+ADD ./build/service/ /etc/service/
+
+RUN apt-get update && \
+    apt-get upgrade -y -o Dpkg::Options::="--force-confold" && \
+    apt-get install -y curl wget unzip xsltproc apache2 && \
+    cd /tmp && \
+    echo " =====> Install Coldfusion" && \
+    wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/install.profile && \
+    wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/ColdFusion_10_WWEJ_linux64.bin && \
+    chmod +x /tmp/ColdFusion_10_WWEJ_linux64.bin && \
+    /tmp/ColdFusion_10_WWEJ_linux64.bin -f /tmp/install.profile && \
+    rm /tmp/ColdFusion_10_WWEJ_linux64.bin && \
+    rm /tmp/install.profile && \
+    echo " =====> Disable admin security" && \
+    cd /tmp && wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/neo-security-config.sh && \
+    chmod +x /tmp/neo-security-config.sh && \
+    /tmp/neo-security-config.sh /opt/coldfusion10/cfusion false && \
+    echo " =====> Start up the CF server instance and wait for a moment" && \
+    /opt/coldfusion10/cfusion/bin/coldfusion start; sleep 30 && \
+    echo " =====> Simulate a browser request on the admin UI to complete installation" && \
+    curl -v http://localhost:8500/CFIDE/administrator/index.cfm?configServer=true && \
+    echo " =====> Stop the CF server instance" && \
+    /opt/coldfusion10/cfusion/bin/coldfusion stop && \
+    echo " =====> Re-enable admin security" && \
+    /tmp/neo-security-config.sh /opt/coldfusion10/cfusion true && \
+    rm /tmp/neo-security-config.sh && \
+    echo " =====> Apply mandatory hotfix" && \
+    cd /tmp && wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/cf10_mdt_updt.jar && \
+    /opt/coldfusion10/jre/bin/java -jar /tmp/cf10_mdt_updt.jar -i silent && \
+    rm cf10_mdt_updt.jar && \
+    echo " =====> Apply hotfix 13" && \
+    cd /tmp && wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/hotfix_013.jar && \
+    /opt/coldfusion10/jre/bin/java -jar /tmp/hotfix_013.jar -i silent && \
+    rm hotfix_013.jar && \
+    echo " =====> Configure Apache2 to run in front of Tomcat" && \
+    /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2 -script /etc/init.d/apache2 && \
+    echo " =====> Coldfusion permissions" && \
+    chmod -R 755 /etc/service/coldfusion10 && \
+    echo " =====> Install Apache modules " && \
     a2enmod rewrite && a2enmod headers && \
     apt-get install -y libapache2-mod-rpaf && a2enmod rpaf && \
-    echo "Setup Timezone" && \
-    echo $TIMEZONE | sudo tee /etc/timezone && sudo dpkg-reconfigure --frontend noninteractive tzdata && \
-    echo "Install PHP5" && \
+    echo " =====> Setup Timezone" && \
+    apt-get install -y tzdata && \
+    echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && \
+    echo " =====> Install PHP5" && \
     apt-get install -y php5 php5-gd php-pear make && \
     pecl install -o -f redis && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
-    echo "Install wkhtmltopdf" && \
-    apt-get install -y xvfb xfonts-75dpi && \
-    wget --quiet https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    rm -f wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && \
-    echo "Install jq" && \
+    echo " =====> Install wkhtmltopdf" && \
+    apt-get install -y xvfb xfonts-75dpi libfontconfig wkhtmltopdf && \
+    echo " =====> Install jq" && \
     wget --quiet https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/bin/jq && \
-    echo "Clean" && \
+    echo " =====> Clean" && \
+    apt-get remove -y xsltproc && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 ADD ./build/jvm.config /opt/coldfusion10/cfusion/bin/jvm.config

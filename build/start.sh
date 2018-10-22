@@ -143,9 +143,8 @@ setSessionManager
 /sbin/my_init &
 echo "Waiting coldfusion start..."
 
-tail -f /opt/coldfusion10/cfusion/logs/*.log &
-tail -f /var/log/apache2/*.log &
-
 setParameters
+
+tail -f /var/log/apache2/*.log /opt/coldfusion10/cfusion/logs/*.log &
 
 wait
