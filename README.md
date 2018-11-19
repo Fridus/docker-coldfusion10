@@ -1,8 +1,6 @@
 
 # Docker CF10
 
-From `finalcut/coldfusion10` : [registry docker](https://hub.docker.com/r/finalcut/coldfusion10/), [github](https://github.com/finalcut/docker-coldfusion10).
-
 ```
 docker pull fridus/coldfusion10
 ```
@@ -15,6 +13,7 @@ docker pull fridus/coldfusion10
 - [wkhtmltopdf](http://wkhtmltopdf.org/)
 - Better config java (see [jvm.config](./build/jvm.config))
 - Default encoding `UTF-8`
+- redis session
 
 ## Create the docker
 
@@ -109,7 +108,24 @@ docker run -d -e COLDFUSION_SERIAL_NUMBER="1234-1234-1234-1234-1234-1234" \
   fridus/coldfusion10
 ```
 
+### Redis session
+
+With a link `redis` or environment variables
+
+#### Link
+- REDIS_DATABASE (default `0`)
+
+#### Env
+- REDIS_HOST
+- REDIS_PORT
+- REDIS_DATABASE (default `0`)
+
+
 ## Access
 
 - `/CFIDE/administrator/index.cfm`
 - The admin password for the coldfusion server is `Adm1n$`
+
+## About
+
+Projet based on [finalcut/coldfusion10](https://github.com/finalcut/docker-coldfusion10)
