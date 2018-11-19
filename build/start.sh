@@ -96,14 +96,55 @@ setParameters () {
   fi
 }
 
+_setSessionManager () {
+  host=$1
+  port=$2
+  database=$3
+
+  echo "host=$host"
+  echo "port=$port"
+  echo "database=$database"
+
+  # Coldfusion
+  cat /opt/coldfusion10/cfusion/runtime/conf/context.template.xml | \
+    sed "s/REDIS_HOST/$host/" | \
+    sed "s/REDIS_PORT/$port/" | \
+    sed "s/REDIS_DATABASE/$database/" \
+    > /opt/coldfusion10/cfusion/runtime/conf/context.xml
+
+  # PHP
+  cat /etc/php5/apache2/php.ini | \
+    sed "s/session.save_handler = files/session.save_handler = redis\nsession.save_path = \"tcp:\/\/$host:$port\"\nextension=redis.so/" \
+    > /etc/php5/apache2/php.ini.tmp
+  mv /etc/php5/apache2/php.ini.tmp /etc/php5/apache2/php.ini
+}
+
+setSessionManager () {
+  if [ ! -z $REDIS_PORT_6379_TCP_ADDR ]; then
+    REDIS_DATABASE=${REDIS_DATABASE:-"0"}
+    _setSessionManager $REDIS_PORT_6379_TCP_ADDR $REDIS_PORT_6379_TCP_PORT ${REDIS_DATABASE:-"0"}
+  elif [ ! -z $REDIS_HOST ]; then
+    REDIS_DATABASE=${REDIS_DATABASE:-"0"}
+    REDIS_PORT=${REDIS_PORT:-"6379"}
+    _setSessionManager $REDIS_HOST $REDIS_PORT ${REDIS_DATABASE:-"0"}
+  else
+    echo "Warn: no redis session manager."
+  fi
+}
+
 # Set serial number
-if [ ! -z $SERIAL ]; then
-  setSN $SERIAL
+if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
+  setSN $COLDFUSION_SERIAL_NUMBER
 fi
+
+setSessionManager
 
 # Start
 /sbin/my_init &
 echo "Waiting coldfusion start..."
+
 setParameters
+
+tail -f /var/log/apache2/*.log /opt/coldfusion10/cfusion/logs/*.log &
 
 wait
