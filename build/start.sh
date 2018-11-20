@@ -132,9 +132,25 @@ setSessionManager () {
   fi
 }
 
+setAdminPassword () {
+  PASSWORD_PATH="/opt/coldfusion10/cfusion/lib/password.properties"
+  echo ''
+  echo "Set Admin password ..."
+  echo ''
+  cat $PASSWORD_PATH | \
+  sed -e "s/^password=.*$/password=$1/" | \
+  sed -e "s/^encrypted=.*$/encrypted=false/" \
+  > $PASSWORD_PATH
+}
+
 # Set serial number
 if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
   setSN $COLDFUSION_SERIAL_NUMBER
+fi
+
+# Set admin password
+if [ ! -z $COLDFUSION_ADMIN_PASSWORD ]; then
+  setAdminPassword $COLDFUSION_ADMIN_PASSWORD
 fi
 
 setSessionManager

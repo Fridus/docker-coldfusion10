@@ -108,6 +108,12 @@ docker run -d -e COLDFUSION_SERIAL_NUMBER="1234-1234-1234-1234-1234-1234" \
   fridus/coldfusion10
 ```
 
+### Set Admin password
+
+```sh
+docker run -d -e COLDFUSION_ADMIN_PASSWORD="myPassword" fridus/coldfusion10
+```
+
 ### Redis session
 
 With a link `redis` or environment variables
