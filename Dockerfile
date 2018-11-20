@@ -26,7 +26,7 @@ RUN apt-get update && \
     echo " =====> Start up the CF server instance and wait for a moment" && \
     /opt/coldfusion10/cfusion/bin/coldfusion start; sleep 30 && \
     echo " =====> Simulate a browser request on the admin UI to complete installation" && \
-    curl -v http://localhost:8500/CFIDE/administrator/index.cfm?configServer=true && \
+    curl -L --silent http://localhost:8500/CFIDE/administrator/index.cfm?configServer=true && \
     echo " =====> Stop the CF server instance" && \
     /opt/coldfusion10/cfusion/bin/coldfusion stop && \
     echo " =====> Re-enable admin security" && \
