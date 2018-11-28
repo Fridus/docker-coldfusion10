@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_PASSWORD=${CFPASSWORD:-'Adm1n$'}
+_PASSWORD=${COLDFUSION_ADMIN_PASSWORD:-'Adm1n$'}
 _DEFAULT_HOST=${DATASOURCE_HOST:-''}
 
 setConfig () {
