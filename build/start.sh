@@ -93,6 +93,15 @@ setParameters () {
       echo ''
     fi
 
+    # Set scheduler cluster
+    if [ ! -z $SCHEDULER_CLUSTER_DSN ]; then
+      echo ''
+      echo "Set Scheduler cluster: $SCHEDULER_CLUSTER_DSN"
+      local _SCHEDULER_CLUSTER_CREATETABLES=${SCHEDULER_CLUSTER_CREATETABLES:-"false"}
+      setConfig scheduler setClusterDSNName "{\"dsname\": \"$SCHEDULER_CLUSTER_DSN\",\"createtables\": $_SCHEDULER_CLUSTER_CREATETABLES}"
+      echo ''
+    fi
+
   fi
 }
 

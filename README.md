@@ -23,6 +23,24 @@ docker run -d -p 8080:80 \
   fridus/coldfusion10
 ```
 
+| Variable | Default value | |
+|----------|---------------|--------|
+| DATASOURCE_NAME | | |
+| DATASOURCE_HOST | | |
+| DATASOURCE_USER | `root` | |
+| DATASOURCE_PASSWORD | empty | |
+| DATASOURCE_DB | DATASOURCE_NAME | |
+| DATASOURCE_ARGS | | |
+| DATASOURCES | | In format JSON. `DATASOURCE_HOST` is the default host |
+| SMTP_PORT_25_TCP_ADDR | | Mail server |
+| COLDFUSION_SERIAL_NUMBER | | |
+| COLDFUSION_ADMIN_PASSWORD | `Adm1n$` | |
+| REDIS_DATABASE | `0` | |
+| REDIS_HOST | | |
+| REDIS_PORT | | |
+| SCHEDULER_CLUSTER_DSN | | |
+| SCHEDULER_CLUSTER_CREATETABLES | false | |
+
 ### With custom vhost
 ```sh
 docker run -d -p 8080:80 \
@@ -125,6 +143,18 @@ With a link `redis` or environment variables
 - REDIS_HOST
 - REDIS_PORT
 - REDIS_DATABASE (default `0`)
+
+
+### Scheduler cluster
+
+#### Env
+
+- SCHEDULER_CLUSTER_DSN
+- SCHEDULER_CLUSTER_CREATETABLES
+
+```sh
+docker run -d -e SCHEDULER_CLUSTER_DSN="tasks" fridus/coldfusion10
+```
 
 
 ## Access
