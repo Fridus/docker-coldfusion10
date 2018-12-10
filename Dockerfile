@@ -51,7 +51,7 @@ RUN apt-get update && \
     apt-get install -y tzdata && \
     echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && \
     echo " =====> Install PHP5" && \
-    apt-get install -y php5 php5-gd php-pear make && \
+    apt-get install -y php5-dev php5 php5-gd php-pear make && \
     pecl install -o -f redis && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
