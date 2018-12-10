@@ -56,7 +56,11 @@ RUN apt-get update && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
     echo " =====> Install wkhtmltopdf" && \
-    apt-get install -y xvfb xfonts-75dpi libfontconfig wkhtmltopdf && \
+    mkdir -p /tmp/wkhtml && cd /tmp/wkhtml && \
+    apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 && \
+    wget "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb" -O wkhtmltopdf.deb && \
+    dpkg -i wkhtmltopdf.deb && \
+    cd && rm -rf /tmp/wkhtml && \
     echo " =====> Install jq" && \
     wget --quiet https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && \
     chmod +x jq-linux64 && \
