@@ -1,9 +1,9 @@
-FROM phusion/baseimage:0.9.9
+FROM phusion/baseimage:0.9.18
 EXPOSE 80 8500
 VOLUME ["/var/www", "/tmp/config"]
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV REFRESHED_AT 2018_10_19
+ENV REFRESHED_AT 2018_12_10
 ENV TIMEZONE Europe/Brussels
 
 ADD ./build/service/ /etc/service/
@@ -36,12 +36,12 @@ RUN apt-get update && \
     cd /tmp && wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/cf10_mdt_updt.jar && \
     /opt/coldfusion10/jre/bin/java -jar /tmp/cf10_mdt_updt.jar -i silent && \
     rm cf10_mdt_updt.jar && \
-    echo " =====> Apply hotfix 13" && \
-    cd /tmp && wget -q https://s3-eu-west-1.amazonaws.com/igloo-devops/coldfusion10-install/hotfix_013.jar && \
-    /opt/coldfusion10/jre/bin/java -jar /tmp/hotfix_013.jar -i silent && \
-    rm hotfix_013.jar && \
+    echo " =====> Apply hotfix 23" && \
+    cd /tmp && wget -q https://cfdownload.adobe.com/pub/adobe/coldfusion/hotfix_023.jar && \
+    /opt/coldfusion10/jre/bin/java -jar /tmp/hotfix_023.jar -i silent && \
+    rm hotfix_023.jar && \
     echo " =====> Configure Apache2 to run in front of Tomcat" && \
-    /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2 -script /etc/init.d/apache2 && \
+    /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2ctl -script /etc/init.d/apache2 && \
     echo " =====> Coldfusion permissions" && \
     chmod -R 755 /etc/service/coldfusion10 && \
     echo " =====> Install Apache modules " && \
