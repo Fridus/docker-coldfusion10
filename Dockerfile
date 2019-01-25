@@ -3,10 +3,7 @@ EXPOSE 80 8500
 VOLUME ["/var/www", "/tmp/config"]
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV REFRESHED_AT 2018_12_10
 ENV TIMEZONE Europe/Brussels
-
-ADD ./build/service/ /etc/service/
 
 RUN apt-get update && \
     apt-get upgrade -y -o Dpkg::Options::="--force-confold" && \
@@ -42,8 +39,6 @@ RUN apt-get update && \
     rm hotfix_023.jar && \
     echo " =====> Configure Apache2 to run in front of Tomcat" && \
     /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2ctl -script /etc/init.d/apache2 && \
-    echo " =====> Coldfusion permissions" && \
-    chmod -R 755 /etc/service/coldfusion10 && \
     echo " =====> Install Apache modules " && \
     a2enmod rewrite && a2enmod headers && \
     apt-get install -y libapache2-mod-rpaf && a2enmod rpaf && \
@@ -70,6 +65,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+ADD ./build/service/ /etc/service/
+RUN echo " =====> Coldfusion permissions" && \
+    chmod -R 755 /etc/service/coldfusion10
 ADD ./build/jvm.config /opt/coldfusion10/cfusion/bin/jvm.config
 ADD ./build/coldfusion-service /opt/coldfusion10/cfusion/bin/coldfusion
 ADD ./build/cfapi-json-gateway/Gateway.cfc /opt/coldfusion10/cfusion/wwwroot/CFIDE/cfadmin-agent/Gateway.cfc
@@ -78,9 +76,6 @@ ADD ./build/tomcat-redis-session/tomcat-redis-session-manager-blackboard-1.2.2.j
 ADD ./build/tomcat-redis-session/commons-pool-1.6.jar /opt/coldfusion10/cfusion/runtime/lib/commons-pool-1.6.jar
 ADD ./build/tomcat-redis-session/context.xml /opt/coldfusion10/cfusion/runtime/conf/context.template.xml
 ADD ./build/lib/neo-runtime.xml /opt/coldfusion10/cfusion/lib/neo-runtime.xml
-ADD ./build/start.sh /start.sh
 
 RUN chmod 777 /opt/coldfusion10/cfusion/bin/jvm.config && \
     chmod +x /opt/coldfusion10/cfusion/bin/coldfusion && ln -s /opt/coldfusion10/cfusion/bin/coldfusion /etc/init.d/coldfusion
-
-CMD /start.sh
