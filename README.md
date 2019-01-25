@@ -3,6 +3,7 @@
 
 ```
 docker pull fridus/coldfusion10
+docker pull quay.io/fridus/coldfusion10
 ```
 
 ## Features
@@ -25,21 +26,22 @@ docker run -d -p 8080:80 \
 
 | Variable | Default value | |
 |----------|---------------|--------|
-| DATASOURCE_NAME | | |
-| DATASOURCE_HOST | | |
-| DATASOURCE_USER | `root` | |
-| DATASOURCE_PASSWORD | empty | |
-| DATASOURCE_DB | DATASOURCE_NAME | |
-| DATASOURCE_ARGS | | |
-| DATASOURCES | | In format JSON. `DATASOURCE_HOST` is the default host |
-| SMTP_PORT_25_TCP_ADDR | | Mail server |
-| COLDFUSION_SERIAL_NUMBER | | |
 | COLDFUSION_ADMIN_PASSWORD | `Adm1n$` | |
+| COLDFUSION_SERIAL_NUMBER | | |
+| DATASOURCE_ARGS | | |
+| DATASOURCE_DB | DATASOURCE_NAME | |
+| DATASOURCE_HOST | | |
+| DATASOURCE_NAME | | |
+| DATASOURCE_PASSWORD | empty | |
+| DATASOURCE_USER | `root` | |
+| DATASOURCES | | In format JSON. `DATASOURCE_HOST` is the default host |
 | REDIS_DATABASE | `0` | |
 | REDIS_HOST | | |
 | REDIS_PORT | | |
-| SCHEDULER_CLUSTER_DSN | | |
 | SCHEDULER_CLUSTER_CREATETABLES | false | |
+| SCHEDULER_CLUSTER_DSN | | |
+| SMTP_PORT_25_TCP_ADDR | | Mail server |
+| TIMEZONE | Europe/Brussels | |
 
 ### With custom vhost
 ```sh

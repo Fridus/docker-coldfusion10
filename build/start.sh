@@ -170,12 +170,19 @@ if [ ! -z $COLDFUSION_ADMIN_PASSWORD ]; then
   setAdminPassword $COLDFUSION_ADMIN_PASSWORD
 fi
 
+# Set timezone
+if [ `cat /etc/timezone` != "$TIMEZONE" ]; then
+  echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+fi
+
+# Session manager
 setSessionManager
 
 # Start
 /sbin/my_init &
 echo "Waiting coldfusion start..."
 
+# Set parameters
 setParameters
 
 tail -f /var/log/apache2/*.log /opt/coldfusion10/cfusion/logs/*.log &
