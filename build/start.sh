@@ -185,6 +185,9 @@ echo "Waiting coldfusion start..."
 # Set parameters
 setParameters
 
-tail -f /var/log/apache2/*.log /opt/coldfusion10/cfusion/logs/*.log &
+# Logs
+if [ ! -z $OUTPUT_LOGS ] && [ "$OUTPUT_LOGS" = true ]; then
+  tail -f /var/log/apache2/*.log /opt/coldfusion10/cfusion/logs/*.log &
+fi
 
 wait

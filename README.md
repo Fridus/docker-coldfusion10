@@ -35,6 +35,7 @@ docker run -d -p 8080:80 \
 | DATASOURCE_PASSWORD | empty | |
 | DATASOURCE_USER | `root` | |
 | DATASOURCES | | In format JSON. `DATASOURCE_HOST` is the default host |
+| OUTPUT_LOGS | `false` | Set to `true` to add the apache and coldfusion logs to the output |
 | REDIS_DATABASE | `0` | |
 | REDIS_HOST | | |
 | REDIS_PORT | | |
