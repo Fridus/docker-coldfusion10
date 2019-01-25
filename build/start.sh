@@ -41,13 +41,17 @@ setJsonVar () {
 
 setSN () {
   LICENSE_PATH="/opt/coldfusion10/cfusion/lib/license.properties"
+  LICENSE_PATH_TMP="/opt/coldfusion10/cfusion/lib/license.properties-tmp"
   echo ''
   echo "Set Serial number ..."
   echo ''
   cat $LICENSE_PATH | \
   sed -e '/code=/ s/^#*/#/' | \
   sed -e "s/^sn=.*$/sn=$1/" \
-  > $LICENSE_PATH
+  > $LICENSE_PATH_TMP
+
+  cat $LICENSE_PATH_TMP > $LICENSE_PATH
+  rm $LICENSE_PATH_TMP
 }
 
 setParameters () {
@@ -143,13 +147,17 @@ setSessionManager () {
 
 setAdminPassword () {
   PASSWORD_PATH="/opt/coldfusion10/cfusion/lib/password.properties"
+  PASSWORD_PATH_TMP="/opt/coldfusion10/cfusion/lib/password.properties-tmp"
   echo ''
   echo "Set Admin password ..."
   echo ''
   cat $PASSWORD_PATH | \
   sed -e "s/^password=.*$/password=$1/" | \
   sed -e "s/^encrypted=.*$/encrypted=false/" \
-  > $PASSWORD_PATH
+  > $PASSWORD_PATH_TMP
+
+  cat $PASSWORD_PATH_TMP > $PASSWORD_PATH
+  rm $PASSWORD_PATH_TMP
 }
 
 # Set serial number
