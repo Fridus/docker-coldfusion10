@@ -94,7 +94,7 @@ setParameters () {
     # Set mail server
     if [ ! -z $SMTP_PORT_25_TCP_ADDR ]; then
       echo ''
-      echo "Set Mail Server: $SMTP_PORT_25_TCP_ADDR"
+      echo "Set Mail Server..."
       setConfig mail setMailServer "{\"server\": \"$SMTP_PORT_25_TCP_ADDR\"}"
       echo ''
     fi
