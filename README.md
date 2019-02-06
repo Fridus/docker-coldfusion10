@@ -9,7 +9,10 @@ docker pull quay.io/fridus/coldfusion10
 ## Features
 
 - [cfapi-json-gateway](https://github.com/LoicMahieu/cfapi-json-gateway)
-- Apache modules `rewrite` and `headers` enabled
+- Apache modules enabled :
+  + `headers`
+  + `remoteip`
+  + `rewrite`
 - Packages `curl php5 php5-gd`
 - [wkhtmltopdf](http://wkhtmltopdf.org/)
 - Better config java (see [jvm.config](./build/jvm.config))
