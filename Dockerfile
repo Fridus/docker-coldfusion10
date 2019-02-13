@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.10.2
 EXPOSE 80 8500
 VOLUME ["/var/www", "/tmp/config"]
 
@@ -45,13 +45,15 @@ RUN apt-get update && \
     apt-get install -y tzdata && \
     echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && \
     echo " =====> Install PHP5" && \
-    apt-get install -y php5-dev php5 php5-gd php-pear make && \
+    add-apt-repository -y ppa:ondrej/php && \
+    apt-get update && \
+    apt-get install -y php5.6-dev php5.6 php5.6-gd php-pear make && \
     pecl install -o -f redis && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
     echo " =====> Install wkhtmltopdf" && \
     mkdir -p /tmp/wkhtml && cd /tmp/wkhtml && \
-    apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 && \
+    apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 libjpeg-turbo8 && \
     wget "https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.2.1/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb" -O wkhtmltopdf.deb && \
     dpkg -i wkhtmltopdf.deb && \
     cd && rm -rf /tmp/wkhtml && \
@@ -60,6 +62,7 @@ RUN apt-get update && \
     chmod +x jq-linux64 && \
     mv jq-linux64 /usr/bin/jq && \
     echo " =====> Clean" && \
+    apt autoremove -y && \
     apt-get remove -y xsltproc && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
