@@ -171,8 +171,9 @@ if [ ! -z $COLDFUSION_ADMIN_PASSWORD ]; then
 fi
 
 # Set timezone
-if [ `cat /etc/timezone` != "$TIMEZONE" ]; then
-  echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+if [ ! -z $TIMEZONE ] && [ -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
+  echo $TIMEZONE > /etc/timezone
+  ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime
 fi
 
 # Session manager

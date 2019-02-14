@@ -43,6 +43,7 @@ RUN apt-get update && \
     a2enmod rewrite headers remoteip && \
     echo " =====> Setup Timezone" && \
     apt-get install -y tzdata && \
+    ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
     echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && \
     echo " =====> Install PHP5" && \
     add-apt-repository -y ppa:ondrej/php && \
