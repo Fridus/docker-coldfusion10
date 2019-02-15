@@ -48,10 +48,11 @@ RUN apt-get update && \
     echo " =====> Install PHP5" && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
-    apt-get install -y php5.6-dev php5.6 php5.6-gd php-pear make && \
+    apt install -y php5.6-dev php5.6 php-pear make && \
     pecl install -o -f redis && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
+    apt-get install -y php5.6-gd php5.6-xml && \
     echo " =====> Install wkhtmltopdf" && \
     mkdir -p /tmp/wkhtml && cd /tmp/wkhtml && \
     apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 libjpeg-turbo8 && \
