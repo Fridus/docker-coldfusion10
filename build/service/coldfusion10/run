@@ -161,6 +161,21 @@ setAdminPassword () {
   rm $PASSWORD_PATH_TMP
 }
 
+setJvmJavaArgs () {
+  local JVM_CONFIG_PATH="/opt/coldfusion10/cfusion/bin/jvm.config"
+  local JVM_CONFIG_PATH_TMP="${JVM_CONFIG_PATH}-tmp"
+  echo ''
+  echo "Set JVM java.args ..."
+  echo ''
+
+  cat $JVM_CONFIG_PATH | \
+  sed -e "s|java.args=.*$|java.args=$1|" \
+  > $JVM_CONFIG_PATH_TMP
+
+  cat $JVM_CONFIG_PATH_TMP > $JVM_CONFIG_PATH
+  rm $JVM_CONFIG_PATH_TMP
+}
+
 # Set serial number
 if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
   setSN $COLDFUSION_SERIAL_NUMBER
@@ -179,6 +194,11 @@ fi
 
 # Session manager
 setSessionManager
+
+# jvm java args
+if [ "$JVM_JAVA_ARGS" != ""  ]; then
+  setJvmJavaArgs "$JVM_JAVA_ARGS"
+fi
 
 # Start
 echo "Waiting coldfusion start..."
