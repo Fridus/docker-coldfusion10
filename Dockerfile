@@ -40,7 +40,7 @@ RUN apt-get update && \
     echo " =====> Configure Apache2 to run in front of Tomcat" && \
     /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2ctl -script /etc/init.d/apache2 && \
     echo " =====> Install Apache modules " && \
-    a2enmod rewrite headers remoteip && \
+    a2enmod rewrite headers remoteip expires && \
     echo " =====> Setup Timezone" && \
     apt-get install -y tzdata && \
     ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
