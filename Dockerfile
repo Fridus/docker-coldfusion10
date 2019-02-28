@@ -39,10 +39,15 @@ RUN apt-get update && \
     rm hotfix_023.jar && \
     echo " =====> Configure Apache2 to run in front of Tomcat" && \
     /opt/coldfusion10/cfusion/runtime/bin/wsconfig -ws Apache -dir /etc/apache2/ -bin /usr/sbin/apache2ctl -script /etc/init.d/apache2 && \
-    echo " =====> Install Apache modules " && \
+    apt autoremove -y && \
+    apt-get remove -y xsltproc && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo " =====> Install Apache modules " && \
     a2enmod rewrite headers remoteip expires && \
     echo " =====> Setup Timezone" && \
-    apt-get install -y tzdata && \
+    apt-get update -qq && apt-get install -y tzdata && \
     ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && \
     echo $TIMEZONE | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && \
     echo " =====> Install PHP5" && \
@@ -65,7 +70,6 @@ RUN apt-get update && \
     mv jq-linux64 /usr/bin/jq && \
     echo " =====> Clean" && \
     apt autoremove -y && \
-    apt-get remove -y xsltproc && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
