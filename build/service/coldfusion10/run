@@ -177,6 +177,26 @@ setJvmJavaArgs () {
   rm $JVM_CONFIG_PATH_TMP
 }
 
+disableHibernateDebug () {
+  local LOG_CONFIG="/opt/coldfusion10/cfusion/lib/log4j.properties"
+  local LOG_CONFIG_TMP="/opt/coldfusion10/cfusion/lib/log4j.properties-tmp"
+  echo ''
+  echo "Disable Hibernate Debug ..."
+  echo ''
+  cat $LOG_CONFIG | \
+  sed -e "s/^log4j.logger.org.hibernate.SQL=.*$/log4j.logger.org.hibernate.SQL==ERROR, HIBERNATECONSOLE/" | \
+  sed -e "s/^#log4j.logger.org.hibernate.type=.*$/log4j.logger.org.hibernate.type=ERROR/" \
+  > $LOG_CONFIG_TMP
+
+  cat $LOG_CONFIG_TMP > $LOG_CONFIG
+  rm $LOG_CONFIG_TMP
+}
+
+# Disable hibernate debug
+if [ -z $ENABLE_HIBERNATE_DEBUG ]; then
+  disableHibernateDebug
+fi
+
 # Set serial number
 if [ ! -z $COLDFUSION_SERIAL_NUMBER ]; then
   setSN $COLDFUSION_SERIAL_NUMBER

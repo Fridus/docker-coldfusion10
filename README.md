@@ -38,6 +38,7 @@ docker run -d -p 8080:80 \
 | DATASOURCE_PASSWORD | empty | |
 | DATASOURCE_USER | `root` | |
 | DATASOURCES | | In format JSON. `DATASOURCE_HOST` is the default host, `DATASOURCE_USER` is the default user |
+| ENABLE_HIBERNATE_DEBUG | | Set to `true` to keep hibernate debug log active |
 | JVM_JAVA_ARGS | See [jvm.config](build/jvm.config) | Overwrite `java.args` |
 | OUTPUT_LOGS | `false` | Set to `true` to add the apache and coldfusion logs to the output |
 | REDIS_DATABASE | `0` | |
