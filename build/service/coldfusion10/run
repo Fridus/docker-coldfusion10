@@ -187,6 +187,8 @@ disableHibernateDebug () {
   sed -e "s/^log4j.logger.org.hibernate.SQL=.*$/log4j.logger.org.hibernate.SQL==ERROR, HIBERNATECONSOLE/" | \
   sed -e "s/^#log4j.logger.org.hibernate.type=.*$/log4j.logger.org.hibernate.type=ERROR/" \
   > $LOG_CONFIG_TMP
+  echo '' >> $LOG_CONFIG_TMP
+  echo 'log4j.appender.HIBERNATECONSOLE.Threshold=OFF' >> $LOG_CONFIG_TMP
 
   cat $LOG_CONFIG_TMP > $LOG_CONFIG
   rm $LOG_CONFIG_TMP
