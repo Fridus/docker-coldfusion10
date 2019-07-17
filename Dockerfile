@@ -58,7 +58,7 @@ RUN echo " =====> Install Apache modules " && \
     pecl -d php_suffix=5.6 install -o -f redis-4.3.0 && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
-    apt-get install -y php5.6-gd php5.6-xml && \
+    apt-get install -y php5.6-gd php5.6-xml php5.6-mbstring && \
     echo " =====> Install wkhtmltopdf" && \
     mkdir -p /tmp/wkhtml && cd /tmp/wkhtml && \
     apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 libjpeg-turbo8 && \
