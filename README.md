@@ -3,7 +3,6 @@
 
 ```
 docker pull fridus/coldfusion10
-docker pull quay.io/fridus/coldfusion10
 ```
 
 ## Features
