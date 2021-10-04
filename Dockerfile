@@ -53,7 +53,7 @@ RUN echo " =====> Install Apache modules " && \
     echo " =====> Install PHP5" && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
-    apt install -y php7.0-dev php7.0 php-pear make && \
+    apt install -y php7.0-dev php7.0 php-pear make libapache2-mod-php7.0 && \
     pecl channel-update pecl.php.net && \
     pecl -d php_suffix=7.0 install -o -f redis-4.3.0 && \
     rm -rf /tmp/pear && \
