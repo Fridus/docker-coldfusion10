@@ -13,7 +13,7 @@ docker pull quay.io/fridus/coldfusion10
   + `headers`
   + `remoteip`
   + `rewrite`
-- Packages `curl php5 php5-gd`
+- Packages `curl php7.0 php7.0-gd`
 - [wkhtmltopdf](http://wkhtmltopdf.org/)
 - Better config java (see [jvm.config](./build/jvm.config))
 - Default encoding `UTF-8`

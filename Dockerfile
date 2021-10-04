@@ -53,12 +53,12 @@ RUN echo " =====> Install Apache modules " && \
     echo " =====> Install PHP5" && \
     add-apt-repository -y ppa:ondrej/php && \
     apt-get update && \
-    apt install -y php5.6-dev php5.6 php-pear make && \
+    apt install -y php7.0-dev php7.0 php-pear make && \
     pecl channel-update pecl.php.net && \
-    pecl -d php_suffix=5.6 install -o -f redis-4.3.0 && \
+    pecl -d php_suffix=7.0 install -o -f redis-4.3.0 && \
     rm -rf /tmp/pear && \
     apt-get remove -y php-pear make && \
-    apt-get install -y php5.6-gd php5.6-xml php5.6-mbstring && \
+    apt-get install -y php7.0-gd php7.0-xml php7.0-mbstring && \
     echo " =====> Install wkhtmltopdf" && \
     mkdir -p /tmp/wkhtml && cd /tmp/wkhtml && \
     apt-get -qq install -y xvfb xfonts-75dpi libfontconfig fontconfig libxrender1 libjpeg-turbo8 && \
